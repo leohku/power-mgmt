@@ -5,9 +5,13 @@ services:
     image: "dashboard/express:${TAG}"
     expose:
       - "8080"
+    volumes:
+      - power-mgmt-db:/etc/power-mgmt
   nginx:
     restart: unless-stopped
     image: "dashboard/nginx:${TAG}"
     ports:
       - "80:80"
       - "443:443"
+volumes:
+  power-mgmt-db:
