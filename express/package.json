@@ -4,13 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@types/sqlite3": "^3.1.8",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "sqlite3": "^5.0.11"
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev": "export NODE_ENV=development; concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
