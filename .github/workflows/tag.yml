@@ -51,6 +51,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_PORT: 8080
+          envkey_PROD_DB_PATH: /etc/power-mgmt/machines.db
           directory: ./express
           file_name: .env
           fail_on_empty: true

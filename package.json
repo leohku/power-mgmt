@@ -9,5 +9,8 @@
     "image:build": "docker compose -f compose.local.yaml build",
     "compose:up": "docker compose -f compose.local.yaml up",
     "local:start": "yarn static:build && yarn image:build && yarn compose:up"
+  },
+  "devDependencies": {
+    "@types/sqlite3": "^3.1.8"
   }
 }
