@@ -39,7 +39,7 @@ jobs:
             User ${USERNAME}
           EOF
       
-      # 3. Add sensitive files
+      # 3. Modify codebase to match production
       - name: Fetch code
         uses: actions/checkout@v3
       - name: Write gitignored sensitive files to directory
@@ -47,14 +47,17 @@ jobs:
           echo "${NGINX_SSL_CERT_KEY}" >> ./nginx/ssl/dashboard-selfsign.key
         env:
           NGINX_SSL_CERT_KEY: ${{ secrets.NGINX_SSL_CERT_KEY }}
-      - name: Write express .env file
+      - name: Write express .env.production file
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_PORT: 8080
-          envkey_PROD_DB_PATH: /etc/power-mgmt/machines.db
+          envkey_DB_PATH: /etc/power-mgmt/machines.db
           directory: ./express
-          file_name: .env
+          file_name: .env.production
           fail_on_empty: true
+      - name: Modify compose.yaml from build to image directive
+        run: |
+          sed -i 's/build: \.\//image: "dashboard\//g' compose.yaml
+          sed -i 's/image: "dashboard\/.*/&:\$\{TAG\}"/g' compose.yaml
 
       # 4. Build frontend
       - name: Build React SPA
@@ -94,11 +97,11 @@ jobs:
           docker save dashboard/nginx:${{ steps.get-tag.outputs.TAG }} |
           gzip |
           ssh ${MACHINE} docker load
-      - name: Transport compose.prod.yaml as compose.yaml
+      - name: Transport compose.yaml
         run: |
           ssh ${MACHINE} "rm -rf ~/tmp-staging || true"
           ssh ${MACHINE} "mkdir ~/tmp-staging"
-          scp compose.prod.yaml ${MACHINE}:~/tmp-staging/compose.yaml
+          scp compose.yaml ${MACHINE}:~/tmp-staging/compose.yaml
 
       # 7. Deployment
       - name: Prepare new Docker deployment
