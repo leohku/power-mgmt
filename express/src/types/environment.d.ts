@@ -4,6 +4,7 @@ declare global {
       NODE_ENV: "development" | "production";
       PORT: string;
       DB_PATH: string;
+      SWITCHBOT_TOKEN: string;
     }
   }
 }
