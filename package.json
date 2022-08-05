@@ -6,11 +6,8 @@
   "private": true,
   "scripts": {
     "static:build": "(rm -rf ./nginx/public || true) && cd spa && yarn build && cp -r ./build ../nginx/public",
-    "image:build": "docker compose -f compose.local.yaml build",
-    "compose:up": "docker compose -f compose.local.yaml up",
-    "local:start": "yarn static:build && yarn image:build && yarn compose:up"
-  },
-  "devDependencies": {
-    "@types/sqlite3": "^3.1.8"
+    "image:build": "docker compose build",
+    "compose:up": "docker compose up",
+    "local:prod": "yarn static:build && yarn image:build && yarn compose:up"
   }
 }
