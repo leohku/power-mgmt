@@ -2,6 +2,7 @@ import path from "path";
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import initDBConnection from "./sqlite";
+import initAPIRouteHandler from "./api";
 
 const main = async () => {
   dotenv.config({ path: path.resolve(process.cwd(), '.env') });
@@ -17,14 +18,8 @@ const main = async () => {
 
   const dbPath: string = process.env.DB_PATH;
   const db = await initDBConnection(dbPath);
-  
-  app.get("/", (req: Request, res: Response): void => {
-    res.send("Express + Typescript Server");
-  });
-  
-  app.listen(port, (): void => {
-    console.log(`[server]: Server is running at https://localhost:${port}`);
-  });
-}
+
+  initAPIRouteHandler(app, db, port);
+};
 
 main();
