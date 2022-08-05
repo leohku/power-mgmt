@@ -100,7 +100,6 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): void => 
           (curTimeWithoutOffset - Date.parse(value.last_request_timestamp as string)) > (5 * 60 * 1000) &&
           value.power_on_status === 0
         ) {
-          console.log((curTimeWithoutOffset - Date.parse(value.last_request_timestamp as string)));
           // Best Effort: Set last_request_timestamp to current time
           db.run(`
             update machines
