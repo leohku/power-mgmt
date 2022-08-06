@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import { Database } from "sqlite3";
 import axios from "axios";
+import { Server } from "http";
 
 interface DBResult {
   last_request_timestamp?: string | null,
@@ -14,7 +15,7 @@ enum DBErrorResponse {
 
 /* --- */
 
-const initAPIRouteHandler = (app: Express, db: Database, port: string): void => {
+const initAPIRouteHandler = (app: Express, db: Database, port: string): Server => {
 
   // Golden path response: null | timestamp in %Y-%m-%d %H:%M:%f format (2022-08-06 12:03:10.123)
   app.get("/last_request_timestamp", async (req: Request, res: Response): Promise<void> => {
@@ -163,8 +164,8 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): void => 
     res.send("up");
   });
 
-  app.listen(port, (): void => {
-    console.log(`[server]: Server is running at https://localhost:${port}`);
+  return app.listen(port, (): void => {
+    console.log(`[Express] Express Server is running at https://localhost:${port}`);
   });
 }
 
