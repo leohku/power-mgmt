@@ -71,7 +71,7 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): void => 
   });
 
   // Golden path response: OK
-  app.get("/request_power_on", async (req: Request, res: Response): Promise<void> => {
+  app.post("/request_power_on", async (req: Request, res: Response): Promise<void> => {
     await new Promise((
         resolve: (value: DBResult | PromiseLike<DBResult>) => void,
         reject: (reason: string) => void) => {
