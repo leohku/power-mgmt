@@ -48,7 +48,7 @@ let initDBConnection = async (dbPath: string): Promise<sqlite3.Database> => {
     }
   );
 
-  console.log("Database initiated and tested");
+  console.log("[SQLite] Database initiated and tested");
   return db;
 };
 

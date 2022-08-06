@@ -1,8 +1,29 @@
 import { Database } from "sqlite3";
 import { SQLiteSingleResult } from "./sqlite/validate";
 import ping from "ping";
+import { WebSocket, WebSocketServer } from "ws";
+import { Server } from "http";
 
-const initPersistentPing = async (db: Database): Promise<void> => {
+const initPersistentPingServer = (server: Server, db: Database): void => {
+  const wss = initWebSocketServer(server);
+  initPersistentPing(db, wss);
+};
+
+const initWebSocketServer = (server: Server) => {
+  const wss = new WebSocketServer({ server });
+  wss.on("connection", ws => {
+    console.log("[WebSocket] New client connected");
+
+    ws.on("close", () => {
+      console.log("[WebSocket] Client close");
+    });
+  });
+
+  console.log("[WebSocket] WebSocket server running");
+  return wss;
+};
+
+const initPersistentPing = async (db: Database, wss: WebSocketServer): Promise<void> => {
   const host = process.env.LAMBDA_IP;
 
   let curPowerOnStatus: boolean = await new Promise((resolve: (value: boolean | PromiseLike<boolean>) => void): any => {
@@ -45,15 +66,20 @@ const initPersistentPing = async (db: Database): Promise<void> => {
           }
         });
         
-        // TODO: Notify WS Clients
+        // Broadcast link state change to all WS clients
+        wss.clients.forEach((client: WebSocket) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(String(curPowerOnStatus ? 1 : 0));
+          };
+        });
 
-
-        console.log("Lambda link state changed to " + (curPowerOnStatus ? "UP" : "DOWN"));
+        console.log("[Pinger] Lambda link state changed to " + (curPowerOnStatus ? "UP" : "DOWN"));
+        console.log("[WebSocket] State change broadcast to all WS clients");
       };
     });
   }, 1000);
 
-  console.log("Ping monitoring initiated");
+  console.log("[Pinger] Ping monitoring initiated");
 };
 
-export default initPersistentPing;
+export default initPersistentPingServer;
