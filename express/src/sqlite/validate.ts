@@ -54,4 +54,4 @@ let runTestQueries = (db: sqlite3.Database, callback: (result: any) => void): vo
   });
 };
 
-export { validateDBPromiseFactory };
+export { validateDBPromiseFactory, SQLiteSingleResult };

@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import initDBConnection from "./sqlite";
 import initAPIRouteHandler from "./api";
+import initPersistentPing from "./ping";
 
 const main = async () => {
   dotenv.config({ path: path.resolve(process.cwd(), '.env') });
@@ -20,6 +21,8 @@ const main = async () => {
   const db = await initDBConnection(dbPath);
 
   initAPIRouteHandler(app, db, port);
+  initPersistentPing(db);
+  
 };
 
 main();

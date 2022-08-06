@@ -5,6 +5,8 @@ declare global {
       PORT: string;
       DB_PATH: string;
       SWITCHBOT_TOKEN: string;
+      SWITCHBOT_DEVICE_ID: string;
+      LAMBDA_IP: string;
     }
   }
 }
