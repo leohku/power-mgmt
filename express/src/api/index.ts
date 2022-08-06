@@ -94,10 +94,12 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): void => 
     }).then(
       (value: DBResult): void => {
         const curTimeWithoutOffset = Date.now() + (new Date()).getTimezoneOffset() * 60000;
+        const lastRequestTimestamp = Date.parse(value.last_request_timestamp as string);
+        const timeDelta = curTimeWithoutOffset - lastRequestTimestamp;
 
         if (
           value.last_request_timestamp === null ||
-          (curTimeWithoutOffset - Date.parse(value.last_request_timestamp as string)) > (5 * 60 * 1000) &&
+          timeDelta > (5 * 60 * 1000) &&
           value.power_on_status === 0
         ) {
           console.log((curTimeWithoutOffset - Date.parse(value.last_request_timestamp as string)));
