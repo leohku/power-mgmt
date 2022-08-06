@@ -98,9 +98,10 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): Server =
         const lastRequestTimestamp = Date.parse(value.last_request_timestamp as string);
         const timeDelta = curTimeWithoutOffset - lastRequestTimestamp;
 
-        if (
-          value.last_request_timestamp === null ||
-          timeDelta > (5 * 60 * 1000) &&
+        if ((
+            value.last_request_timestamp === null ||
+            timeDelta > (5 * 60 * 1000)
+          ) &&
           value.power_on_status === 0
         ) {
           // Best Effort: Set last_request_timestamp to current time
