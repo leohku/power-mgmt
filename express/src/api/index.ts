@@ -146,7 +146,11 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): void => 
             res.send("OK");
           }
         } else {
-          res.status(401).send("Unmet power on requirements");
+          if (!(value.power_on_status === 0)) {
+            res.status(401).send("Unmet power on requirements, already on");
+          } else {
+            res.status(401).send("Unmet power on requirements, cooldown time not finished");
+          }
         }
       },
       (reason: string): void => {res.status(500).send(reason)}
