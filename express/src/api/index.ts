@@ -137,6 +137,8 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): Server =
             .then(function (response) {
               if (response.data.statusCode === 100) {
                 res.send("OK");
+              } else {
+                res.status(500).send("Switchbot API returned an unknown status code " + String(response.data.statusCode));
               }
             })
             .catch(function (error) {
