@@ -28,7 +28,8 @@ const useServerState = () => {
   const powerOnStatusServerQuery = useQuery(["power_on_status"], async () => {
     return Number(await fetchFromServer("GET", "/power_on_status")) as ServerRestResponse["power_on_status"];
   }, {
-    staleTime: Infinity
+    staleTime: Infinity,
+    refetchInterval: 60 * 1000  // Refetch in case WebSocket connection closed
   });
 
   usePowerOnStatusSubscription();
