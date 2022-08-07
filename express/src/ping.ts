@@ -40,18 +40,18 @@ const initPersistentPing = async (db: Database, wss: WebSocketServer): Promise<v
     });
   });
 
-  const last5Ping = curPowerOnStatus ? [1,1,1,1,1] : [0,0,0,0,0];
+  const last6Ping = curPowerOnStatus ? [1,1,1,1,1,1] : [0,0,0,0,0,0];
 
   const didStatusChange = (): boolean => {
-    const arrSum = last5Ping.reduce((a, b) => a + b, 0);
-    const instantaneousPowerOnStatus: boolean = arrSum >= 4;
+    const arrSum = last6Ping.reduce((a, b) => a + b, 0);
+    const instantaneousPowerOnStatus: boolean = arrSum >= 3;
     return (instantaneousPowerOnStatus !== curPowerOnStatus);
   };
 
   setInterval(() => {
     ping.sys.probe((host as string), (isAlive: boolean | null) => {
-      last5Ping.unshift(isAlive ? 1 : 0);
-      last5Ping.pop();
+      last6Ping.unshift(isAlive ? 1 : 0);
+      last6Ping.pop();
       if (didStatusChange()) {
         curPowerOnStatus = !curPowerOnStatus;
         

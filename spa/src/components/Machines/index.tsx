@@ -14,7 +14,7 @@ interface PowerOnIconProps {
 /* --- */
 
 const Machines = () => {
-  const { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled } = useServerState();
+  const { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled, requestPowerOn } = useServerState();
 
   console.log({
     isInitialFetchingOrError,
@@ -63,7 +63,7 @@ const Machines = () => {
               <PowerOnIcon powerColor={powerColorString.color}/>
               <PowerOnStatus>{powerColorString.text}</PowerOnStatus>
             </PowerOnStatusGroup>
-            <PowerButton disabled={buttonDisabled}>Request power on</PowerButton>
+            <PowerButton disabled={buttonDisabled} onClick={requestPowerOn}>Request power on</PowerButton>
           </PowerControlGroup>
         </PVEContainer>
         ) : null

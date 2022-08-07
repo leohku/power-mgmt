@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ServerRestResponse, PowerOnStatusEnum } from "../types/serverStates";
 import usePowerOnStatusSubscription from "./usePowerOnStatusSubscription";
 
 const baseUrl: string = process.env.NODE_ENV === "development" ? "http://" + process.env.REACT_APP_API_BASE_HOST as string : "/api";
 
-const fetchFromServer = async (endpoint: string): Promise<string> => {
-  return await fetch(baseUrl + endpoint)
+const fetchFromServer = async (method: "GET" | "POST", endpoint: string): Promise<string> => {
+  return await fetch(baseUrl + endpoint, { method: method })
           .then(r => {if (r.ok) {return r.text()} else {throw new Error("Unknown status code")}})
           .catch((networkError) => {throw new Error(networkError)});
 }
@@ -14,9 +14,9 @@ const fetchFromServer = async (endpoint: string): Promise<string> => {
 const useServerState = () => {
   
   // Fetch or subscribe to data sources
-  
+
   const lastRequestTimestampQuery = useQuery(["last_request_timestamp"], async () => {
-    let response = await fetchFromServer("/last_request_timestamp") as ServerRestResponse["last_request_timestamp"];
+    let response = await fetchFromServer("GET", "/last_request_timestamp") as ServerRestResponse["last_request_timestamp"];
     if (response === "null") {
       response = null
     };
@@ -26,7 +26,7 @@ const useServerState = () => {
   });
 
   const powerOnStatusServerQuery = useQuery(["power_on_status"], async () => {
-    return Number(await fetchFromServer("/power_on_status")) as ServerRestResponse["power_on_status"];
+    return Number(await fetchFromServer("GET", "/power_on_status")) as ServerRestResponse["power_on_status"];
   }, {
     staleTime: Infinity
   });
@@ -64,6 +64,14 @@ const useServerState = () => {
     return () => clearInterval(timer);
   }, [lastRequestTimestampQuery.data])
 
+  // onClick handler for "Request power on" button
+  const requestPowerOn = async () => {
+    const serverResponse = await fetchFromServer("POST", "/request_power_on") as ServerRestResponse["request_power_on"];
+    if (serverResponse === "OK") {
+      lastRequestTimestampQuery.refetch();
+    }
+  };
+
   // UI States Mixing
 
   const powerOnStatusUI: PowerOnStatusEnum = !isInitialFetchingOrError ? (() => {
@@ -84,7 +92,7 @@ const useServerState = () => {
     }
   })(): true;
 
-  return { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled };
+  return { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled, requestPowerOn };
 }
 
 export default useServerState;
