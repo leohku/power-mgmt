@@ -16,6 +16,9 @@ const usePowerOnStatusSubscription = () => {
       const newPowerStatus = Number(event.data);
       queryClient.setQueryData(["power_on_status"], newPowerStatus);
     }
+    websocket.onclose = () => {
+      console.log("[WebSocket] Subscription closed");
+    }
 
     return () => {
       websocket.close();
