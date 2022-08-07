@@ -5,7 +5,7 @@
   "author": "Leo Ho <leoh@connect.hku.hk>",
   "private": true,
   "scripts": {
-    "static:build": "(rm -rf ./nginx/public || true) && cd spa && yarn build && cp -r ./build ../nginx/public",
+    "static:build": "export CI=true; (rm -rf ./nginx/public || true) && cd spa && yarn build && cp -r ./build ../nginx/public",
     "image:build": "docker compose build",
     "compose:up": "docker compose up",
     "local:prod": "yarn static:build && yarn image:build && yarn compose:up"
