@@ -114,7 +114,7 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): Server =
           // Best Effort: Set last_request_timestamp to current time
           db.run(`
             update machines
-            set last_request_timestamp = strftime('%Y-%m-%d %H:%M:%f','now')
+            set last_request_timestamp = strftime('%Y-%m-%dT%H:%M:%fZ','now')
             where machine_name = ?
           `, ["lambda"], (err: Error | null) => {
             if (err) {

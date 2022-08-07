@@ -49,9 +49,9 @@ const useServerState = () => {
       return false;
     }
     
-    const curTimeWithoutOffset = Date.now() + (new Date()).getTimezoneOffset() * 60000;
-    const lastRequestTimestamp = Date.parse(lastRequestTimestampQuery.data as string);
-    timeDelta = curTimeWithoutOffset - lastRequestTimestamp;
+    const curTimestampUTC = Date.now() + (new Date()).getTimezoneOffset() * 60000;
+    const lastRequestTimestampUTC = Date.parse(lastRequestTimestampQuery.data as string);
+    timeDelta = curTimestampUTC - lastRequestTimestampUTC;
     return timeDelta < (5 * 60 * 1000);
   })() : false;
 
@@ -74,9 +74,7 @@ const useServerState = () => {
   const requestPowerOn = async () => {
     const serverResponse = await fetchFromServer("POST", "/request_power_on") as ServerRestResponse["request_power_on"];
     if (serverResponse === "OK") {
-        // Note that technically this isn't in the same format as the server returned string,
-        // but Date.parse() parses it with no problem, so it does the job
-        const currentUTCTimeString = (new Date()).toUTCString();
+        const currentUTCTimeString = (new Date()).toISOString();
         queryClient.setQueryData(["last_request_timestamp"], currentUTCTimeString);
     }
   };
