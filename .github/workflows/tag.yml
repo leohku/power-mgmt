@@ -54,6 +54,12 @@ jobs:
           envkey_SWITCHBOT_DEVICE_ID: ${{ secrets.SWITCHBOT_DEVICE_ID }}
           envkey_SWITCHBOT_TOKEN: ${{ secrets.SWITCHBOT_TOKEN }}
           envkey_LAMBDA_IP: ${{ secrets.LAMBDA_IP }}
+          envkey_MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          envkey_MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          envkey_MAIL_RECEIVER: ${{ secrets.MAIL_RECEIVER }}
+          envkey_OAUTH_CLIENTID: ${{ secrets.OAUTH_CLIENTID }}
+          envkey_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          envkey_OAUTH_REFRESH_TOKEN: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           directory: ./express
           file_name: .env
           fail_on_empty: true

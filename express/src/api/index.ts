@@ -3,6 +3,7 @@ import { Database } from "sqlite3";
 import axios from "axios";
 import cors from "cors";
 import { Server } from "http";
+import nodemailer from "nodemailer";
 
 interface DBResult {
   last_request_timestamp?: string | null,
@@ -155,6 +156,36 @@ const initAPIRouteHandler = (app: Express, db: Database, port: string): Server =
             // Always send OK when working in development
             res.send("OK");
           }
+
+          // Send email to notify power on request success
+          const transporter = nodemailer.createTransport({
+            // @ts-ignore
+            service: "gmail",
+            auth: {
+              type: "OAuth2",
+              user: process.env.MAIL_USERNAME,
+              pass: process.env.MAIL_PASSWORD,
+              clientId: process.env.OAUTH_CLIENTID,
+              clientSecret: process.env.OAUTH_CLIENT_SECRET,
+              refreshToken: process.env.OAUTH_REFRESH_TOKEN
+            }
+          });
+
+          const mailOptions = {
+            from: process.env.MAIL_USERNAME,
+            to: process.env.MAIL_RECEIVER,
+            subject: "[Dashboard] dumbpve has been powered on",
+            text: "A request has been received to power on dumbpve"
+          };
+
+          transporter.sendMail(mailOptions, (err, data) => {
+            if (err) {
+              console.log("[Mailer] Unable to send mail: " + err);
+            } else {
+              console.log("[Mailer] Power on notification sent");
+            }
+          });
+
         } else {
           if (!(value.power_on_status === 0)) {
             res.status(401).send("Unmet power on requirements, already on");
