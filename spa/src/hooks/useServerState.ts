@@ -49,7 +49,7 @@ const useServerState = () => {
       return false;
     }
     
-    const curTimestampUTC = Date.now() + (new Date()).getTimezoneOffset() * 60000;
+    const curTimestampUTC = Date.now();
     const lastRequestTimestampUTC = Date.parse(lastRequestTimestampQuery.data as string);
     timeDelta = curTimestampUTC - lastRequestTimestampUTC;
     return timeDelta < (5 * 60 * 1000);
