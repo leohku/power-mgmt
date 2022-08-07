@@ -40,7 +40,7 @@ const useServerState = () => {
   const isError: boolean = lastRequestTimestampQuery.isError || powerOnStatusServerQuery.isError;
   const isInitialFetchingOrError: boolean = isInitialFetching || isError;
 
-  let timeDelta: number;
+  let timeDelta: number = 0;
   const isInCooldown: boolean = !isInitialFetchingOrError ? (() => {
     if (lastRequestTimestampQuery.data === null) {
       return false;
@@ -61,8 +61,11 @@ const useServerState = () => {
       }, (5 * 60 * 1000 - timeDelta))
     }
 
+    // Important: since all deps are included, cleaning up ensures only the last effect triggers a timer
+    // https://stackoverflow.com/a/56800795
+
     return () => clearInterval(timer);
-  }, [lastRequestTimestampQuery.data])
+  }, [lastRequestTimestampQuery.data, isInCooldown, lastRequestTimestampQuery, timeDelta])
 
   // onClick handler for "Request power on" button
   const requestPowerOn = async () => {
