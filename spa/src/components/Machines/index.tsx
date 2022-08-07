@@ -46,7 +46,6 @@ const Machines = () => {
     <ContentWrapper>
       <Title>Machines</Title>
       <Spacer />
-      {!isFetchingOrError ? (
         <PVEContainer>
         <InfoContainer>
           <Top>
@@ -65,7 +64,6 @@ const Machines = () => {
           <PowerButton disabled={buttonDisabled}>Request power on</PowerButton>
         </PowerControlGroup>
       </PVEContainer>
-      ): null}
     </ContentWrapper>
   )
 }
