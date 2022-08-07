@@ -5,7 +5,6 @@ const Header = () => {
   return (
     <Wrapper>
       <ContentWrapper>
-        <Title>Dashboard</Title>
         <Selected>
           <HardDrive width={18} color={"hsl(var(--color-blue))"} />
           <SelectedText>Machines</SelectedText>
@@ -17,14 +16,14 @@ const Header = () => {
 
 const Wrapper = styled.header`
   width: 100%;
-  height: 130px;
-  background: hsl(var(--color-primary));
+  height: 70px;
+  background: hsl(var(--color-white));
   border-bottom: 1px solid hsl(var(--color-gray-150));
   display: flex;
   justify-content: center;
 
   @media (max-width: 600px) {
-    height: 108px;
+    height: 60px;
   }
 `
 
@@ -33,19 +32,8 @@ const ContentWrapper = styled.div`
   height: 100%;
   padding: 21px 24px 0px 24px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`
-
-const Title = styled.h2`
-  font-size: calc(22rem / 16);
-  font-weight: var(--weight-medium-light);
-  color: hsl(var(--color-primary-text));
-  letter-spacing: -0.012em;
-
-  @media (max-width: 600px) {
-    font-size: calc(20rem / 16);
-  }
+  justify-content: flex-start;
+  align-items: flex-end;
 `
 
 const Selected = styled.div`
