@@ -1,5 +1,7 @@
 # power-mgmt
 
+<img width="1068" alt="Screenshot 2022-08-08 at 3 37 36 AM" src="https://user-images.githubusercontent.com/63468786/183308124-1bc8f040-91fc-4b0b-b9e3-6caf41cf965a.png">
+
 External power management for PVE.
 
 Built from RNCE Stack (pronounced "rinse"), an unopinionated template for building and quickly deploying web applications running on a single machine.
