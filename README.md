@@ -1,6 +1,6 @@
 # power-mgmt
 
-<img width="1068" alt="Screenshot 2022-08-08 at 3 37 36 AM" src="https://user-images.githubusercontent.com/63468786/183308124-1bc8f040-91fc-4b0b-b9e3-6caf41cf965a.png">
+<img width="981" alt="Screenshot of power-mgmt" src="https://user-images.githubusercontent.com/63468786/183308989-e713cd1d-5289-4737-8919-839868a9af3d.png">
 
 External power management for PVE.
 
