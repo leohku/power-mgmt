@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ServerRestResponse, PowerOnStatusEnum } from "../types/serverStates";
 import usePowerOnStatusSubscription from "./usePowerOnStatusSubscription";
 
@@ -12,8 +12,9 @@ const fetchFromServer = async (method: "GET" | "POST", endpoint: string): Promis
 }
 
 const useServerState = () => {
+  const queryClient = useQueryClient();
   
-  // Fetch or subscribe to data sources
+  // Subscribe to data sources
 
   const lastRequestTimestampQuery = useQuery(["last_request_timestamp"], async () => {
     let response = await fetchFromServer("GET", "/last_request_timestamp") as ServerRestResponse["last_request_timestamp"];
@@ -22,14 +23,15 @@ const useServerState = () => {
     };
     return response;
   }, {
-    staleTime: Infinity
+    staleTime: Infinity,
+    refetchInterval: 10 * 1000
   });
 
   const powerOnStatusServerQuery = useQuery(["power_on_status"], async () => {
     return Number(await fetchFromServer("GET", "/power_on_status")) as ServerRestResponse["power_on_status"];
   }, {
     staleTime: Infinity,
-    refetchInterval: 60 * 1000  // Refetch in case WebSocket connection closed
+    refetchInterval: 10 * 1000  // Refetch in case WebSocket connection closed
   });
 
   usePowerOnStatusSubscription();
@@ -72,7 +74,10 @@ const useServerState = () => {
   const requestPowerOn = async () => {
     const serverResponse = await fetchFromServer("POST", "/request_power_on") as ServerRestResponse["request_power_on"];
     if (serverResponse === "OK") {
-      lastRequestTimestampQuery.refetch();
+        // Note that technically this isn't in the same format as the server returned string,
+        // but Date.parse() parses it with no problem, so it does the job
+        const currentUTCTimeString = (new Date()).toUTCString();
+        queryClient.setQueryData(["last_request_timestamp"], currentUTCTimeString);
     }
   };
 
