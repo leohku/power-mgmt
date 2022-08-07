@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const wsBaseUrl: string = (process.env.NODE_ENV === "development" ?
                             "ws://" + process.env.REACT_APP_API_BASE_HOST :
-                            ((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/api");
+                            ((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/api/");
 
 const usePowerOnStatusSubscription = () => {
   const queryClient = useQueryClient();

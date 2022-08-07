@@ -16,12 +16,6 @@ interface PowerOnIconProps {
 const Machines = () => {
   const { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled, requestPowerOn } = useServerState();
 
-  console.log({
-    isInitialFetchingOrError,
-    powerOnStatusUI,
-    buttonDisabled
-  });
-
   const powerColorString: PowerColorString = (() => {
     switch (powerOnStatusUI) {
       case PowerOnStatusEnum.PoweredOff:
