@@ -1,14 +1,20 @@
-import React from 'react';
 import styled from 'styled-components';
 import Header from '../Header';
 import Machines from '../Machines';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Wrapper>
-      <Header />
-      <Machines />
-    </Wrapper>
+    <QueryClientProvider client={queryClient}>
+      <Wrapper>
+        <Header />
+        <Machines />
+      </Wrapper>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
 

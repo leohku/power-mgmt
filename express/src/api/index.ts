@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import { Database } from "sqlite3";
 import axios from "axios";
+import cors from "cors";
 import { Server } from "http";
 
 interface DBResult {
@@ -16,6 +17,11 @@ enum DBErrorResponse {
 /* --- */
 
 const initAPIRouteHandler = (app: Express, db: Database, port: string): Server => {
+
+  // Turn CORS on if development, else Nginx serves everything behind one origin
+  if (process.env.NODE_ENV === "development") {
+    app.use(cors());
+  };
 
   // Golden path response: null | timestamp in %Y-%m-%d %H:%M:%f format (2022-08-06 12:03:10.123)
   app.get("/last_request_timestamp", async (req: Request, res: Response): Promise<void> => {

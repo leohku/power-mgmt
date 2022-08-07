@@ -1,14 +1,56 @@
 import styled from "styled-components";
+import useServerState from "../../hooks/useServerState";
+import { PowerOnStatusEnum } from "../../types/serverStates";
+
+interface PowerColorString {
+  color: string,
+  text: string
+}
+
+interface PowerOnIconProps {
+  powerColor: string
+}
+
+/* --- */
 
 const Machines = () => {
+  const { isFetchingOrError, powerOnStatus, buttonDisabled } = useServerState();
+
+  console.log({
+    isFetchingOrError,
+    powerOnStatus,
+    buttonDisabled
+  });
+
+  const powerColorString: PowerColorString = (() => {
+    switch (powerOnStatus) {
+      case PowerOnStatusEnum.PoweredOff:
+        return {
+          color: "--color-gray-600",
+          text: "Powered off"
+        }
+      case PowerOnStatusEnum.PoweringOn:
+        return {
+          color: "--color-yellow",
+          text: "Powering on..."
+        }
+      case PowerOnStatusEnum.PoweredOn:
+        return {
+          color: "--color-green",
+          text: "Powered on"
+        }
+    }
+  })();
+
   return (
     <ContentWrapper>
       <Title>Machines</Title>
       <Spacer />
-      <PVEContainer>
+      {!isFetchingOrError ? (
+        <PVEContainer>
         <InfoContainer>
           <Top>
-            <MobilePowerOnIcon/>
+            <MobilePowerOnIcon powerColor={powerColorString.color}/>
             <MachineName>dumbpve</MachineName>
           </Top>
           <Bottom>
@@ -17,12 +59,13 @@ const Machines = () => {
         </InfoContainer>
         <PowerControlGroup>
           <PowerOnStatusGroup>
-            <PowerOnIcon/>
-            <PowerOnStatus>Powered on</PowerOnStatus>
+            <PowerOnIcon powerColor={powerColorString.color}/>
+            <PowerOnStatus>{powerColorString.text}</PowerOnStatus>
           </PowerOnStatusGroup>
-          <PowerButton>Request power on</PowerButton>
+          <PowerButton disabled={buttonDisabled}>Request power on</PowerButton>
         </PowerControlGroup>
       </PVEContainer>
+      ): null}
     </ContentWrapper>
   )
 }
@@ -81,14 +124,14 @@ const Top = styled.div`
   gap: 8px;
 `
 
-const MobilePowerOnIcon = styled.div`
+const MobilePowerOnIcon = styled.div<PowerOnIconProps>`
   display: none;
 
   @media (max-width: 600px) {
     display: block;
     width: 9px;
     height: 9px;
-    background: hsl(var(--color-green));
+    background: hsl(var(${p => p.powerColor}));
     border-radius: 50%;
     transform: translateY(1px);
   }
@@ -128,10 +171,10 @@ const PowerOnStatusGroup = styled.div`
     display: none;
   }
 `
-const PowerOnIcon = styled.div`
+const PowerOnIcon = styled.div<PowerOnIconProps>`
   width: 9px;
   height: 9px;
-  background: hsl(var(--color-green));
+  background: hsl(var(${p => p.powerColor}));
   border-radius: 50%;
 `
 
@@ -151,8 +194,15 @@ const PowerButton = styled.button`
   cursor: pointer;
   transition: transform 100ms ease;
 
-  &:active {
+  &:active:not(&:disabled) {
     transform: scale(0.97);
+  }
+
+  &:disabled {
+    background: hsl(var(--color-gray-200));
+    color: hsl(var(--color-gray-600));
+    box-shadow: none;
+    cursor: default;
   }
 `
 
