@@ -14,16 +14,16 @@ interface PowerOnIconProps {
 /* --- */
 
 const Machines = () => {
-  const { isFetchingOrError, powerOnStatus, buttonDisabled } = useServerState();
+  const { isInitialFetchingOrError, powerOnStatusUI, buttonDisabled } = useServerState();
 
   console.log({
-    isFetchingOrError,
-    powerOnStatus,
+    isInitialFetchingOrError,
+    powerOnStatusUI,
     buttonDisabled
   });
 
   const powerColorString: PowerColorString = (() => {
-    switch (powerOnStatus) {
+    switch (powerOnStatusUI) {
       case PowerOnStatusEnum.PoweredOff:
         return {
           color: "--color-gray-600",
@@ -46,24 +46,28 @@ const Machines = () => {
     <ContentWrapper>
       <Title>Machines</Title>
       <Spacer />
-        <PVEContainer>
-        <InfoContainer>
-          <Top>
-            <MobilePowerOnIcon powerColor={powerColorString.color}/>
-            <MachineName>dumbpve</MachineName>
-          </Top>
-          <Bottom>
-            <MachineSubtext>VMs: lambda.tailnet</MachineSubtext>
-          </Bottom>
-        </InfoContainer>
-        <PowerControlGroup>
-          <PowerOnStatusGroup>
-            <PowerOnIcon powerColor={powerColorString.color}/>
-            <PowerOnStatus>{powerColorString.text}</PowerOnStatus>
-          </PowerOnStatusGroup>
-          <PowerButton disabled={buttonDisabled}>Request power on</PowerButton>
-        </PowerControlGroup>
-      </PVEContainer>
+      {
+        !isInitialFetchingOrError ? (
+          <PVEContainer>
+          <InfoContainer>
+            <Top>
+              <MobilePowerOnIcon powerColor={powerColorString.color}/>
+              <MachineName>dumbpve</MachineName>
+            </Top>
+            <Bottom>
+              <MachineSubtext>VMs: lambda.tailnet</MachineSubtext>
+            </Bottom>
+          </InfoContainer>
+          <PowerControlGroup>
+            <PowerOnStatusGroup>
+              <PowerOnIcon powerColor={powerColorString.color}/>
+              <PowerOnStatus>{powerColorString.text}</PowerOnStatus>
+            </PowerOnStatusGroup>
+            <PowerButton disabled={buttonDisabled}>Request power on</PowerButton>
+          </PowerControlGroup>
+        </PVEContainer>
+        ) : null
+      }
     </ContentWrapper>
   )
 }
